@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+security:
+  jwt:
+    secret: test-secret-key-for-jwt-signing-in-tests-only-do-not-use-in-prod
+    issuer: anomaly-detection-backend
+    expiration-minutes: 60
+  ingest:
+    api-key: test-api-key
+
+ai-engine:
+  base-url: http://localhost:8000
+  connect-timeout-ms: 500
+  timeout-ms: 1000
+
+logging:
+  level:
+    com.security.anomalydetection: DEBUG
