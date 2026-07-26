@@ -1,16 +1,16 @@
-# Stage 1: Build the jar using Maven
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Stage 1: Build the application using Maven
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+COPY . .
+# Build the jar, skipping tests to speed up deployment
+RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Run the application
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
-# Use the entrypoint script to launch the app
-# Automatically convert Render's DATABASE_URL to JDBC format inline at runtime
+# Copy the built jar from the build stage and rename it to app.jar
+COPY --from=build /app/target/*.jar app.jar
+
+# Entrypoint to handle Render's database URL and start the app
 ENTRYPOINT ["sh", "-c", "export SPRING_DATASOURCE_URL=\"jdbc:postgresql://${DATABASE_URL#*://}?sslmode=require\"; exec java -jar app.jar"]
