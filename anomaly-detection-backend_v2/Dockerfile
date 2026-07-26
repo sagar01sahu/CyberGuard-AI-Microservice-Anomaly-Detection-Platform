@@ -2,8 +2,8 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
-# Build the jar, skipping tests to speed up deployment
-RUN ./mvnw clean package -DskipTests
+# Use global 'mvn' instead of './mvnw' since Maven is pre-installed in this image
+RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
 FROM eclipse-temurin:17-jre-jammy
