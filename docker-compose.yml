@@ -32,12 +32,12 @@ services:
     container_name: cyberguard_backend
     ports:
       - "8080:8080"
-      - "8001:8001"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cyberguard_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=securepassword123
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
       - AI_ENGINE_URL=http://ai-engine:8000
     depends_on:
       - postgres
@@ -45,13 +45,16 @@ services:
     networks:
       - cyberguard-net
 
-  # 4. Synthetic Log Generator Service
+  # 4. Synthetic Log Generator & Attack Control Service
   generator:
     build: ./subproblem-1_v3
     container_name: cyberguard_generator
-
+    ports:
+      - "8001:8001"
     environment:
-        - API_URL=http://backend:8080/api/v1/logs/ingest
+      - API_URL=http://backend:8080/api/v1/logs/ingest
+      - PORT=8001
+      - HOST=0.0.0.0
     depends_on:
       - backend
     networks:
