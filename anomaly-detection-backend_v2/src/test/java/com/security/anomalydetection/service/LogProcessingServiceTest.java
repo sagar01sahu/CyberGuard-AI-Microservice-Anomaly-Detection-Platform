@@ -42,10 +42,12 @@ class LogProcessingServiceTest {
     private AiEngineClient aiEngineClient;
 
     private LogProcessingService service;
+    @Mock
+    private TelemetryService telemetryService;
 
     @BeforeEach
     void setUp() {
-        service = new LogProcessingService(accessLogRepository, riskAlertRepository, aiEngineClient);
+        service = new LogProcessingService(accessLogRepository, riskAlertRepository, aiEngineClient,telemetryService);
     }
 
     private IncomingLogRequest sampleRequest() {

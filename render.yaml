@@ -1,0 +1,65 @@
+databases:
+  - name: cyberguard-db
+    databaseName: cyberguard_db
+    user: postgres
+    plan: free
+
+services:
+  # 1. Python PyTorch AI Engine (mapped to ./subproblem_3)
+  - type: web
+    name: cyberguard-ai-engine
+    runtime: docker
+    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
+    branch: main
+    plan: free
+    dockerContext: ./subproblem_3
+    dockerfilePath: ./subproblem_3/Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+
+  # 2. Java Spring Boot Backend (mapped to ./anomaly-detection-backend_v2)
+  - type: web
+    name: cyberguard-backend
+    runtime: docker
+    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
+    branch: main
+    plan: free
+    dockerContext: ./anomaly-detection-backend_v2
+    dockerfilePath: ./anomaly-detection-backend_v2/Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: cyberguard-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: cyberguard-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: cyberguard-db
+          property: password
+      - key: AI_ENGINE_URL
+        fromService:
+          type: web
+          name: cyberguard-ai-engine
+          property: host
+
+  # 3. React Frontend (mapped to ./frontend)
+  - type: web
+    name: cyberguard-frontend
+    runtime: docker
+    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
+    branch: main
+    plan: free
+    dockerContext: ./frontend
+    dockerfilePath: ./frontend/Dockerfile
+    envVars:
+      - key: PORT
+        value: 80
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: cyberguard-backend
+          property: url

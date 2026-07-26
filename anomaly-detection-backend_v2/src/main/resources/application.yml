@@ -1,13 +1,11 @@
 spring:
   application:
     name: anomaly-detection-backend
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/anomaly_detection
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:sagar}
+    url: jdbc:postgresql://postgres:5432/cyberguard_db
+    username: postgres
+    password: securepassword123
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,27 +16,16 @@ spring:
           time_zone: UTC
     open-in-view: false
 
-  jackson:
-    time-zone: UTC
-    default-property-inclusion: non_null
-
 server:
   port: 8080
 
 ai-engine:
-  base-url: ${AI_ENGINE_BASE_URL:http://localhost:8000}
-  connect-timeout-ms: 5000
-  timeout-ms: 15000
-  retry-interval-ms: 60000
+  base-url: http://ai-engine:8000
 
 security:
   jwt:
-    secret: ${JWT_SECRET:change-this-to-a-long-random-secret-in-production}
+    secret: change-this-to-a-long-random-secret-in-production
     issuer: anomaly-detection-backend
     expiration-minutes: 60
   ingest:
-    api-key: ${INGEST_API_KEY:change-this-static-api-key-in-production}
-
-logging:
-  level:
-    com.security.anomalydetection: INFO
+    api-key: change-this-static-api-key-in-production

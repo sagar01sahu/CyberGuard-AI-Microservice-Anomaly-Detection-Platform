@@ -1,0 +1,77 @@
+services:
+  # 1. Database Service
+  postgres:
+    image: postgres:15-alpine
+    container_name: cyberguard_postgres
+    environment:
+      POSTGRES_DB: cyberguard_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: securepassword123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cyberguard-net
+
+  # 2. Python PyTorch AI Engine
+  ai-engine:
+    build: ./subproblem_3
+    container_name: cyberguard_ai_engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    networks:
+      - cyberguard-net
+    restart: always
+
+  # 3. Java Spring Boot Backend
+  backend:
+    build: ./anomaly-detection-backend_v2
+    container_name: cyberguard_backend
+    ports:
+      - "8080:8080"
+      - "8001:8001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cyberguard_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=securepassword123
+      - AI_ENGINE_URL=http://ai-engine:8000
+    depends_on:
+      - postgres
+      - ai-engine
+    networks:
+      - cyberguard-net
+
+  # 4. Synthetic Log Generator Service
+  generator:
+    build: ./subproblem-1_v3
+    container_name: cyberguard_generator
+
+    environment:
+        - API_URL=http://backend:8080/api/v1/logs/ingest
+    depends_on:
+      - backend
+    networks:
+      - cyberguard-net
+    restart: always
+
+  # 5. React Frontend
+  frontend:
+    build: ./frontend
+    container_name: cyberguard_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - cyberguard-net
+
+volumes:
+  postgres_data:
+
+networks:
+  cyberguard-net:
+    driver: bridge

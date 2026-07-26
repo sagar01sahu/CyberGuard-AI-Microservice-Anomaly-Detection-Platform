@@ -25,23 +25,26 @@ export default function App() {
     try {
 
       if (!jwtToken.current) {
-        const tokenRes = await fetch(`${SPRING_BOOT_BASE}/auth/dev-token?subject=analyst`, {
-          method: 'POST'
-        });
+        try {
+          const tokenRes = await fetch(`${SPRING_BOOT_BASE}/auth/dev-token?subject=analyst`, {
+            method: 'POST'
+          });
 
-        if (tokenRes.ok) {
-          const tokenData = await tokenRes.json();
-          jwtToken.current = tokenData.token;
-        } else {
-          console.error('Failed to fetch JWT token. Ensure Spring Boot is running with the "dev" profile.');
-          return;
+          if (tokenRes.ok) {
+            const tokenData = await tokenRes.json();
+            jwtToken.current = tokenData.token;
+          } else {
+            console.warn('JWT dev-token endpoint returned non-200. Retrying without Bearer header...');
+          }
+        } catch (e) {
+          console.warn('Could not connect to auth endpoint:', e);
         }
       }
 
-
+      // Build auth headers only if token exists
       const authHeaders = {
-        'Authorization': `Bearer ${jwtToken.current}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(jwtToken.current ? { 'Authorization': `Bearer ${jwtToken.current}` } : {})
       };
 
 
