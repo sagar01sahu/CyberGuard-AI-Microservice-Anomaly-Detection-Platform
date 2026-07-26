@@ -1,38 +1,60 @@
-# 2. Java Spring Boot Backend
-- type: web
-  name: cyberguard-backend
-  runtime: docker
-  dockerfilePath: ./anomaly-detection-backend_v2/Dockerfile
-  dockerContext: ./anomaly-detection-backend_v2
-  plan: free
-  envVars:
-    - key: PORT
-      value: "8080"
-    - key: SPRING_PROFILES_ACTIVE
-      value: "dev"
-    # Map individual database components from Render
-    - key: DB_HOST
-      fromDatabase:
-        name: cyberguard-db
-        property: host
-    - key: DB_PORT
-      fromDatabase:
-        name: cyberguard-db
-        property: port
-    - key: DB_NAME
-      fromDatabase:
-        name: cyberguard-db
-        property: database
-    - key: SPRING_DATASOURCE_USERNAME
-      fromDatabase:
-        name: cyberguard-db
-        property: user
-    - key: SPRING_DATASOURCE_PASSWORD
-      fromDatabase:
-        name: cyberguard-db
-        property: password
-    # Construct the proper JDBC URL that Spring Boot requires
-    - key: SPRING_DATASOURCE_URL
-      value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require
-    - key: AI_ENGINE_URL
-      value: https://cyberguard-ai-engine.onrender.com
+services:
+  # 1. Python PyTorch AI Engine
+  - type: web
+    name: cyberguard-ai-engine
+    runtime: docker
+    dockerfilePath: ./subproblem_3/Dockerfile
+    dockerContext: ./subproblem_3
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8000"
+
+  # 2. Java Spring Boot Backend
+  - type: web
+    name: cyberguard-backend
+    runtime: docker
+    dockerfilePath: ./anomaly-detection-backend_v2/Dockerfile
+    dockerContext: ./anomaly-detection-backend_v2
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SPRING_PROFILES_ACTIVE
+        value: "dev"
+      # Pass Render's native connection string safely
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cyberguard-db
+          property: connectionString
+      - key: AI_ENGINE_URL
+        value: https://cyberguard-ai-engine.onrender.com
+
+  # 3. Synthetic Log Generator & Attack Control Service
+  - type: web
+    name: cyberguard-generator
+    runtime: docker
+    dockerfilePath: ./subproblem-1_v3/Dockerfile
+    dockerContext: ./subproblem_1_v3
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8001"
+      - key: API_URL
+        value: https://cyberguard-backend.onrender.com/api/v1/logs/ingest
+
+  # 4. React Frontend (Vite / Nginx)
+  - type: web
+    name: cyberguard-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: PORT
+        value: "80"
+
+databases:
+  - name: cyberguard-db
+    databaseName: cyberguard_db
+    plan: free

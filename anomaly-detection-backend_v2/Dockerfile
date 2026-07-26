@@ -8,7 +8,8 @@ RUN mvn clean package -DskipTests
 # Stage 2: Run the application
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Use the entrypoint script to launch the app
+ENTRYPOINT ["/entrypoint.sh"]
