@@ -29,12 +29,12 @@ services:
       - key: AI_ENGINE_URL
         value: https://cyberguard-ai-engine.onrender.com
 
-  # 3. Synthetic Log Generator & Attack Control Service
+  # 3. Synthetic Log Generator & Attack Control Service (Fixed path with hyphen)
   - type: web
     name: cyberguard-generator
     runtime: docker
     dockerfilePath: ./subproblem-1_v3/Dockerfile
-    dockerContext: ./subproblem_1_v3
+    dockerContext: ./subproblem-1_v3
     plan: free
     envVars:
       - key: PORT
