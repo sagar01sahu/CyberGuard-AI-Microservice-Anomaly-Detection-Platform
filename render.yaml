@@ -58,8 +58,7 @@ services:
         value: "80"
 
 databases:
-  # Free PostgreSQL Database (Note: 30-day expiration limit)
+  # Free PostgreSQL Database (Note: user field removed as Render handles it)
   - name: cyberguard-db
     databaseName: cyberguard_db
-    user: postgres
     plan: free
