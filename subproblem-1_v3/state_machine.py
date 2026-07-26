@@ -1,18 +1,4 @@
-"""
-state_machine.py
 
-Probabilistic user behaviour engine.
-
-Responsibilities
-----------------
-• Login behaviour
-• Session lifecycle
-• Resource access
-• Idle behaviour
-• Logout behaviour
-
-This module works together with SessionManager.
-"""
 
 from __future__ import annotations
 
@@ -34,23 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class ProbabilisticStateMachine:
-    """
-    Simulates realistic employee behaviour.
 
-    States
-
-        OFFLINE
-            ↓
-        LOGIN_ATTEMPT
-            ↓
-        ACTIVE_SESSION
-            ↓
-        RESOURCE_ACCESS
-            ↓
-        IDLE
-            ↓
-        LOGOUT
-    """
 
     def __init__(
 
@@ -62,7 +32,7 @@ class ProbabilisticStateMachine:
 
         self.sessions = session_manager
 
-    # ======================================================
+
 
     @staticmethod
     def _login_probability(
@@ -72,11 +42,7 @@ class ProbabilisticStateMachine:
         current_time: datetime
 
     ) -> float:
-        """
-        Probability of logging in.
 
-        Gaussian around habitual login hour.
-        """
 
         hour = current_time.hour + current_time.minute / 60
 
@@ -94,7 +60,7 @@ class ProbabilisticStateMachine:
 
         return float(probability)
 
-    # ======================================================
+
 
     @staticmethod
     def _choose_resource(
@@ -109,7 +75,7 @@ class ProbabilisticStateMachine:
 
         )
 
-    # ======================================================
+
 
     def next_state(
 
@@ -121,19 +87,7 @@ class ProbabilisticStateMachine:
 
     ) -> Dict:
 
-        """
-        Decide user's next action.
 
-        Returns
-
-        {
-
-            state
-
-            resource
-
-        }
-        """
 
         session = self.sessions.create_session(
 
@@ -141,9 +95,7 @@ class ProbabilisticStateMachine:
 
         )
 
-        # ===========================================
-        # OFFLINE
-        # ===========================================
+
 
         if session.state == "OFFLINE":
 
@@ -173,9 +125,7 @@ class ProbabilisticStateMachine:
 
             }
 
-        # ===========================================
-        # ACTIVE SESSION
-        # ===========================================
+
 
         if session.state == "ACTIVE_SESSION":
 
@@ -217,7 +167,7 @@ class ProbabilisticStateMachine:
 
                 }
 
-            # resource access
+
 
             resource = self._choose_resource(
 
@@ -241,9 +191,8 @@ class ProbabilisticStateMachine:
 
             }
 
-        # ===========================================
-        # IDLE
-        # ===========================================
+
+
 
         if session.state == "IDLE":
 

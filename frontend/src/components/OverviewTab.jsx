@@ -3,7 +3,7 @@ import { ShieldAlert, Activity, CheckCircle2, AlertTriangle, X, Terminal, Cpu, H
 
 export default function OverviewTab({ stats, alerts, aiStatus }) {
   const [selectedAlert, setSelectedAlert] = useState(null);
-  const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
+  const [viewMode, setViewMode] = useState('table');
 
   const isTrained = aiStatus?.is_trained ?? false;
 
@@ -19,7 +19,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
 
   return (
     <div>
-      {/* KPI Cards Grid */}
+
       <div className="kpi-grid">
         <div className="glass-card kpi-card">
           <div>
@@ -70,7 +70,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
         </div>
       </div>
 
-      {/* Live Alerts Table / Cards View */}
+
       <div className="glass-card" style={{ padding: '1.5rem', marginTop: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -119,7 +119,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
             No high-risk security threats detected yet. Trigger an attack scenario in the Attack Simulator tab!
           </div>
         ) : viewMode === 'table' ? (
-          /* Table Layout matching Screenshot #3 */
+
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
               <thead>
@@ -204,7 +204,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
             </table>
           </div>
         ) : (
-          /* Cards View matching Screenshot #2 */
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {alerts.map((alert, idx) => {
               const score = alert.riskScore ?? alert.risk_score ?? 0.0;
@@ -254,7 +254,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
         )}
       </div>
 
-      {/* Side Inspection Drawer Modal matching Screenshot #4 */}
+
       {selectedAlert && (
         <div style={{
           position: 'fixed',
@@ -304,7 +304,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
               </button>
             </div>
 
-            {/* PyTorch Explainability Box */}
+
             <div style={{ background: 'rgba(244, 63, 94, 0.05)', border: '1px solid rgba(244, 63, 94, 0.2)', borderRadius: '10px', padding: '1.2rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.5px', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -323,7 +323,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
               </ul>
             </div>
 
-            {/* Context Grid */}
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div style={{ background: 'rgba(18, 24, 36, 0.8)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
@@ -362,7 +362,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
               </div>
             </div>
 
-            {/* Feature Vectors Box */}
+
             <div style={{ background: 'rgba(18, 24, 36, 0.8)', padding: '1.2rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>
                 GRAPH NEURAL NETWORK FEATURE VECTORS
@@ -383,7 +383,7 @@ export default function OverviewTab({ stats, alerts, aiStatus }) {
               </div>
             </div>
 
-            {/* Recommended SOC Actions */}
+
             <div style={{ marginTop: 'auto' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>
                 RECOMMENDED SOC ACTION

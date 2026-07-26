@@ -1,15 +1,4 @@
-"""
-dispatcher.py
 
-Handles HTTP communication with the Spring Boot REST API.
-
-Responsibilities
-----------------
-- Send JSON logs
-- Retry on failures
-- Exponential backoff
-- Prevent simulation crashes
-"""
 
 from __future__ import annotations
 
@@ -32,9 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class NetworkDispatcher:
-    """
-    Sends log payloads to the configured REST endpoint.
-    """
+
 
     def __init__(
         self,
@@ -49,23 +36,13 @@ class NetworkDispatcher:
 
         self.initial_backoff = Config.INITIAL_BACKOFF
 
-    # =====================================================
+
 
     def send_log(
         self,
         log_payload: Dict
     ) -> bool:
-        """
-        Send a single log event.
 
-        Returns
-        -------
-        bool
-
-            True  -> Successfully delivered
-
-            False -> Delivery failed after retries
-        """
 
         delay = self.initial_backoff
 
@@ -193,21 +170,13 @@ class NetworkDispatcher:
 
         return False
 
-    # =====================================================
+
 
     def send_batch(
         self,
         logs: list[Dict]
     ) -> int:
-        """
-        Sends multiple log events.
 
-        Returns
-        -------
-        int
-
-            Number of successful requests.
-        """
 
         success = 0
 

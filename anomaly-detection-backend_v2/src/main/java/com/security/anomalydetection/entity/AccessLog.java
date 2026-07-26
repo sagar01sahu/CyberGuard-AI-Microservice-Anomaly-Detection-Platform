@@ -54,13 +54,7 @@ public class AccessLog {
     private String resourceAccessed;
     private String role;
 
-    /**
-     * Tracks this log's relationship with the AI engine:
-     *  - ANALYZED         -> the AI engine responded (alert created or not).
-     *  - PENDING_ANALYSIS -> the AI engine call failed/timed out; the log
-     *                        was still saved and is queued for retry by
-     *                        PendingAnalysisRetryScheduler.
-     */
+
     @Builder.Default
     @Column(nullable = false)
     private String processingStatus = "ANALYZED";

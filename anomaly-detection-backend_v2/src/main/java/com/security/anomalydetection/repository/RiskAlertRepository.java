@@ -9,8 +9,6 @@ import java.util.List;
 @Repository
 public interface RiskAlertRepository extends JpaRepository<RiskAlert, Long> {
 
-    /**
-     * Feeds the live dashboard -- the 20 most recent alerts, newest first.
-     */
+
     List<RiskAlert> findTop20ByOrderByTimestampDesc();
 }

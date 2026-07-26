@@ -17,14 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
 
-/**
- * Guards the log ingestion endpoint with a simple static API key
- * (shared secret) instead of JWT, since the caller is a trusted
- * synthetic-data generator service, not an interactive dashboard user.
- *
- * Uses a constant-time comparison (MessageDigest.isEqual) to avoid
- * leaking timing information about the correct key.
- */
+
 @Slf4j
 @Component
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
@@ -58,9 +51,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Authenticate as a system principal so downstream
-        // authorizeHttpRequests() rules (permitAll on this path) are
-        // satisfied without requiring a JWT.
+
         var authentication = new UsernamePasswordAuthenticationToken(
                 "log-generator-service", null, List.of(new SimpleGrantedAuthority("ROLE_INGESTION_SERVICE")));
         SecurityContextHolder.getContext().setAuthentication(authentication);

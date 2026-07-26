@@ -1,17 +1,3 @@
-"""
-simulation.py
-
-Main orchestration engine for the synthetic log generator.
-
-Responsibilities
-----------------
-• Generate users
-• Maintain simulation clock
-• Execute state machine
-• Generate logs
-• Inject anomalies
-• Send logs to Spring Boot
-"""
 
 from __future__ import annotations
 
@@ -31,9 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class SimulationRunner:
-    """
-    Controls the complete simulation.
-    """
+
 
     def __init__(
         self,
@@ -67,7 +51,7 @@ class SimulationRunner:
             len(self.users)
         )
 
-    # ======================================================
+
 
     def simulation_tick(self) -> None:
         """
@@ -85,17 +69,13 @@ class SimulationRunner:
 
             state = result["state"]
 
-            # -----------------------------
-            # User is offline
-            # -----------------------------
+
 
             if state == "OFFLINE":
 
                 continue
 
-            # -----------------------------
-            # Login event
-            # -----------------------------
+
 
             if state == "LOGIN":
 
@@ -104,9 +84,7 @@ class SimulationRunner:
                     "/login"
                 )
 
-            # -----------------------------
-            # Logout
-            # -----------------------------
+
 
             elif state == "LOGOUT":
 
@@ -115,9 +93,7 @@ class SimulationRunner:
                     "/logout"
                 )
 
-            # -----------------------------
-            # Idle
-            # -----------------------------
+
 
             elif state == "IDLE":
 
@@ -126,9 +102,7 @@ class SimulationRunner:
                     "/idle"
                 )
 
-            # -----------------------------
-            # Resource Access
-            # -----------------------------
+
 
             else:
 
@@ -155,7 +129,7 @@ class SimulationRunner:
             generated_logs
         )
 
-    # ======================================================
+
 
     def advance_time(self) -> None:
         """
@@ -166,7 +140,7 @@ class SimulationRunner:
             minutes=self.time_factor
         )
 
-    # ======================================================
+
 
     def run(
         self,

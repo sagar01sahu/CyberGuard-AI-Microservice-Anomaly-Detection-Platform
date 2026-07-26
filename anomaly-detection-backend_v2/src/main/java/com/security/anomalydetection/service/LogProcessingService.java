@@ -18,39 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * Orchestrates the full lifecycle of an incoming access-log event:
- * persist -> pull historical context -> score via the AI engine -> alert.
- *
- * <p><b>Concurrency &amp; isolation notes</b></p>
- * The synthetic data generator pushes logs for many different entities
- * concurrently and at high throughput. Two things matter here:
- *
- * <ol>
- *   <li>{@code Isolation.READ_COMMITTED} (Postgres' default) is enough:
- *       we only ever need to see <i>committed</i> rows when pulling the
- *       "last 5" historical logs for an entity. We deliberately do NOT
- *       need REPEATABLE_READ/SERIALIZABLE guarantees because each
- *       incoming log is independent -- there is no read-modify-write
- *       cycle on a row shared between concurrent requests. READ_COMMITTED
- *       avoids dirty reads while keeping throughput high, since it
- *       doesn't hold long-lived locks across the AI engine round trip.</li>
- *   <li>The AI engine call happens inside the transaction boundary so a
- *       RiskAlert and its parent AccessLog are always committed
- *       atomically. Because that call is blocking network I/O, the DB
- *       connection is held for its duration -- for very high throughput
- *       deployments this should be tuned via (a) a connection pool sized
- *       for the workload and (b) the tight AI-engine timeout configured
- *       in WebClientConfig, so a slow AI engine can never exhaust the
- *       pool.</li>
- * </ol>
- *
- * <p><b>Fallback / rollback</b></p>
- * If the AI engine call fails or times out, the AccessLog write is never
- * lost: it is committed with processingStatus = PENDING_ANALYSIS instead
- * of failing the whole ingestion request, and PendingAnalysisRetryScheduler
- * retries it later.
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -65,21 +33,17 @@ public class LogProcessingService {
     private final AiEngineClient aiEngineClient;
     private final TelemetryService telemetryService;
 
-    /**
-     * Main ingestion workflow, invoked by IngestionController for every
-     * incoming access log.
-     */
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public AccessLog processIncomingLog(IncomingLogRequest request) {
 
         long startTime = System.currentTimeMillis();
 
-        // Step 1: persist the incoming log FIRST so the event is never
-        // lost, even if everything downstream (AI call, alerting) fails.
+
         AccessLog currentLog = toEntity(request);
         currentLog = accessLogRepository.save(currentLog);
 
-        // Record Microservice 1 -> Microservice 2 packet
+
         telemetryService.recordPacket(TelemetryService.MicroservicePacket.builder()
                 .packetId("INGEST-" + currentLog.getId())
                 .sourceService("Microservice 1: Synthetic Log Generator")
@@ -107,10 +71,7 @@ public class LogProcessingService {
         return accessLogRepository.save(currentLog);
     }
 
-    /**
-     * Re-runs AI analysis for an AccessLog that previously failed
-     * (PENDING_ANALYSIS). Used by PendingAnalysisRetryScheduler.
-     */
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public AccessLog reanalyzeExistingLog(AccessLog existingLog) {
         try {
@@ -153,7 +114,7 @@ public class LogProcessingService {
 
         boolean isAnomaly = aiResponse.getRiskScore() != null && aiResponse.getRiskScore() > ALERT_THRESHOLD;
 
-        // Record Microservice 2 -> Microservice 3 packet
+
         telemetryService.recordPacket(TelemetryService.MicroservicePacket.builder()
                 .packetId("AI-PREDICT-" + accessLog.getId())
                 .sourceService("Microservice 2: Spring Boot Backend")

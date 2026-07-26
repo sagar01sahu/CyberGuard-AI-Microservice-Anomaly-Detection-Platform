@@ -1,14 +1,4 @@
-"""
-main.py
 
-FastAPI orchestration layer wrapping the HGNN anomaly detector
-(Sub-Problem 3.1) and the Federated cold-start evaluator
-(Sub-Problem 3.2) behind a single POST /predict endpoint consumed by
-the Spring Boot backend (Sub-Problem 2).
-
-Run locally with:
-    uvicorn main:app --host 0.0.0.0 --port 8000
-"""
 
 from __future__ import annotations
 
@@ -69,7 +59,7 @@ if os.path.exists(MODEL_SAVE_PATH):
     except Exception as e:
         logger.warning(f"Could not load checkpoint from {MODEL_SAVE_PATH}: {e}")
 
-# Pre-train baseline on startup if needed so model status and baselines are fully populated
+
 try:
     logger.info("Initializing startup training & baseline calculation for HGNN...")
     trained_model, baselines, loss_hist = train_security_hgnn(epochs=10)
@@ -113,25 +103,7 @@ def _get_peer_baseline(role: str) -> Dict[str, torch.Tensor]:
     responses={500: {"model": ErrorResponse}},
 )
 async def predict(payload: LogPayload) -> PredictionResponse:
-    """
-    Routes an incoming event to either:
-      - ColdStartEvaluator, if the entity has < 5 historical logs, or
-      - AnomalyDetector (HGNN), if it has >= 5 historical logs.
 
-    Input  (JSON body): LogPayload
-        {
-          "current_event": { ...LogEvent fields... },
-          "historical_logs": [ up to 5 LogEvent objects ]
-        }
-
-    Output (JSON body): PredictionResponse
-        {
-          "risk_score": 0.0-1.0,
-          "anomaly_type": "None" | "Impossible Travel" | "Lateral Movement" |
-                           "Device Spoofing" | "Brute Force" | "Cold-Start Deviation",
-          "explainability": "human-readable reason string"
-        }
-    """
     try:
         current = payload.current_event.model_dump()
         historical = [log.model_dump() for log in payload.historical_logs]

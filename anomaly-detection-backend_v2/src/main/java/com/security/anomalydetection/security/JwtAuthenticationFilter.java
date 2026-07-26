@@ -17,16 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Validates the Bearer JWT on every request that isn't explicitly
- * bypassed (see shouldNotFilter). On success, populates the
- * SecurityContext with an authenticated principal so downstream
- * authorizeHttpRequests() rules let the request through.
- *
- * The dashboard (React) must present this token on every GET endpoint;
- * the log ingestion endpoint is intentionally bypassed here since it
- * is authenticated via a separate static API key (see ApiKeyAuthFilter).
- */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor

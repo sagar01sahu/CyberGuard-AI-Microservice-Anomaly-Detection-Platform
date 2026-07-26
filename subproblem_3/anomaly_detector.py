@@ -1,13 +1,4 @@
-"""
-anomaly_detector.py
 
-Combines the SecurityHGNN structural embedding distance with
-explainable heuristic checks (Haversine impossible-travel, device
-fingerprint drift, brute force) to score a single incoming access-log
-event against a user's historical baseline graph.
-
-Component 3 of Sub-Problem 3.1 (HGNN Anomaly Detector).
-"""
 
 from __future__ import annotations
 
@@ -45,11 +36,7 @@ def _parse_ts(ts: str) -> datetime:
 
 
 class AnomalyDetector:
-    """
-    Scores a single incoming event against a per-user historical
-    baseline HeteroData graph using the trained SecurityHGNN, backed
-    by fast, explainable heuristic pre-checks.
-    """
+
 
     def __init__(self, hgnn_model: SecurityHGNN, graph_builder: Optional[CyberGraphBuilder] = None):
         self.hgnn_model = hgnn_model
@@ -127,7 +114,7 @@ class AnomalyDetector:
             }
         return None
 
-    # -- Public entrypoint -------------------------------------------------
+
     def score_incoming_event(
         self,
         hgnn_model: SecurityHGNN,
@@ -135,19 +122,7 @@ class AnomalyDetector:
         historical_logs: List[Dict],
         incoming_log: Dict,
     ) -> Dict[str, object]:
-        """
-        Args:
-            hgnn_model: trained SecurityHGNN checkpoint to score with.
-            historical_graph: baseline HeteroData from
-                CyberGraphBuilder.build_historical_graph().
-            historical_logs: the raw list of up to 5 historical logs
-                (needed for heuristic checks that reason about
-                timestamps/devices rather than graph structure alone).
-            incoming_log: the new event dict to score.
 
-        Returns:
-            {"risk_score": float, "anomaly_type": str, "explainability": str}
-        """
         self.hgnn_model = hgnn_model
         self.hgnn_model.eval()
 

@@ -1,8 +1,4 @@
-"""
-constants.py
 
-Application constants.
-"""
 
 from enum import Enum
 

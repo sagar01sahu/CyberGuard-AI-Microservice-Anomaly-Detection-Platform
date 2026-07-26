@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 
-/**
- * Thin wrapper around Auth0's java-jwt library for issuing and verifying
- * HMAC-signed JWTs used by the React dashboard.
- */
+
 @Service
 public class JwtService {
 

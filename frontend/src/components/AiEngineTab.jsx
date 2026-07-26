@@ -23,7 +23,7 @@ export default function AiEngineTab({ aiStatus, onTrainModel }) {
 
   return (
     <div>
-      {/* AI Model Overview Banner */}
+
       <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
@@ -58,7 +58,7 @@ export default function AiEngineTab({ aiStatus, onTrainModel }) {
         </div>
       </div>
 
-      {/* Model Technical Metrics Grid */}
+
       <div className="kpi-grid" style={{ marginBottom: '2rem' }}>
         <div className="glass-card kpi-card">
           <div className="kpi-title">Network Architecture</div>
@@ -89,7 +89,7 @@ export default function AiEngineTab({ aiStatus, onTrainModel }) {
         </div>
       </div>
 
-      {/* Training Output & Graph Topology Split */}
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
         {/* Loss History & Output */}
         <div className="glass-card" style={{ padding: '1.5rem' }}>
@@ -120,7 +120,7 @@ export default function AiEngineTab({ aiStatus, onTrainModel }) {
           )}
         </div>
 
-        {/* Heterogeneous Graph Node Types & Edge Schemas */}
+
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <GitBranch style={{ color: 'var(--accent-purple)' }} /> Heterogeneous Cyber Graph Schema

@@ -1,11 +1,3 @@
-"""
-graph_builder.py
-
-Builds a PyTorch Geometric HeteroData baseline graph from historical
-access-log JSON records for a single entity (user).
-
-Component 1 of Sub-Problem 3.1 (HGNN Anomaly Detector).
-"""
 
 from __future__ import annotations
 
@@ -16,9 +8,7 @@ from typing import Dict, List, Tuple
 import torch
 from torch_geometric.data import HeteroData
 
-# ----------------------------------------------------------------------
-# Feature encoding configuration
-# ----------------------------------------------------------------------
+
 
 ROLE_VOCAB = ["MARKETING", "ENGINEERING", "FINANCE", "HR", "IT", "LEGAL", "EXECUTIVE", "SALES", "UNKNOWN"]
 OS_VOCAB = ["macOS", "Windows", "Linux", "iOS", "Android", "UNKNOWN"]
@@ -38,7 +28,7 @@ RESOURCE_FEAT_DIM = SENSITIVITY_DIM + URI_HASH_DIM                 # 17
 
 
 def _one_hot(value: str, vocab: List[str]) -> torch.Tensor:
-    """Return a 1-D one-hot tensor of shape [len(vocab)]."""
+
     idx = vocab.index(value) if value in vocab else vocab.index("UNKNOWN")
     vec = torch.zeros(len(vocab), dtype=torch.float32)
     vec[idx] = 1.0
@@ -46,21 +36,14 @@ def _one_hot(value: str, vocab: List[str]) -> torch.Tensor:
 
 
 def _hash_embed(text: str, dim: int = URI_HASH_DIM) -> torch.Tensor:
-    """
-    Deterministically hash an arbitrary string (e.g. a resource URI)
-    into a fixed-size float embedding in [-1, 1]. Shape: [dim]
-    """
+
     digest = hashlib.sha256(text.encode("utf-8")).digest()
     vals = [(digest[i % len(digest)] / 127.5) - 1.0 for i in range(dim)]
     return torch.tensor(vals, dtype=torch.float32)
 
 
 def _sensitivity_of(uri: str) -> float:
-    """
-    Heuristic sensitivity score in [0, 1] based on resource path keywords.
-    In production this should come from a resource-classification table
-    maintained by the Spring Boot backend rather than string matching.
-    """
+
     uri_lower = uri.lower()
     high_value_markers = ("payroll", "prod_keys", "secrets", ".pem", "finance", "salary")
     medium_value_markers = ("engineering", "hr", "internal")
@@ -72,24 +55,20 @@ def _sensitivity_of(uri: str) -> float:
 
 
 def _scale_geo(lat: float, lon: float) -> torch.Tensor:
-    """Scale lat/lon from [-90,90]/[-180,180] into roughly [-1, 1]."""
+
     return torch.tensor([lat / 90.0, lon / 180.0], dtype=torch.float32)
 
 
 @dataclass
 class _EntityRegistry:
-    """
-    Stable node-index mapping per node type so repeated entities (same
-    device_id, location, resource URI) map to the same graph node
-    instead of duplicating nodes.
-    """
+
     user: Dict[str, int] = field(default_factory=dict)
     device: Dict[str, int] = field(default_factory=dict)
     location: Dict[str, int] = field(default_factory=dict)
     resource: Dict[str, int] = field(default_factory=dict)
 
     def get_or_create(self, table: Dict[str, int], key: str) -> Tuple[int, bool]:
-        """Returns (index, is_new)."""
+
         if key in table:
             return table[key], False
         idx = len(table)
@@ -98,10 +77,7 @@ class _EntityRegistry:
 
 
 class CyberGraphBuilder:
-    """
-    Constructs a per-user baseline HeteroData graph from up to 5
-    historical access-log records supplied by the Spring Boot backend.
-    """
+
 
     def __init__(self) -> None:
         self.registry = _EntityRegistry()
@@ -114,7 +90,7 @@ class CyberGraphBuilder:
         self._edge_accessed: List[Tuple[int, int]] = []        # (user, resource)
         self._edge_located_in: List[Tuple[int, int]] = []      # (device, location)
 
-    # -- internal helpers ---------------------------------------------
+
     def _add_user(self, entity_id: str, role: str) -> int:
         idx, is_new = self.registry.get_or_create(self.registry.user, entity_id)
         if is_new:
@@ -168,43 +144,13 @@ class CyberGraphBuilder:
 
     # -- public API -----------------------------------------------------
     def build_historical_graph(self, historical_logs: List[Dict]) -> HeteroData:
-        """
-        Parses up to 5 historical JSON logs (as forwarded by the Spring
-        Boot backend) and constructs the baseline heterogeneous graph
-        for that entity.
 
-        Args:
-            historical_logs: list of raw log dicts, e.g.:
-                {
-                    "entity_id": "user_4589",
-                    "role": "MARKETING",
-                    "auth_method": "password",
-                    "auth_status": "success",
-                    "timestamp": "2026-07-25T08:00:00.000Z",
-                    "source_ip": "192.168.1.50",
-                    "geo_location": {"lat": 19.076, "lon": 72.8777},
-                    "device_id": "macbook_pro_m2_xyz",
-                    "os_version": "macOS 14",
-                    "user_agent": "Chrome/114.0",
-                    "resource_accessed": "/api/v1/marketing/budget.pdf"
-                }
-
-        Returns:
-            HeteroData with node types {user, device, location, resource}
-            and edge types {logged_in_from, accessed, located_in} plus
-            their reverse edges (added for bidirectional message passing).
-        """
         for log in historical_logs:
             self._ingest_log(log)
         return self._finalize()
 
     def inject_event(self, graph: HeteroData, incoming_log: Dict) -> HeteroData:
-        """
-        Returns a *new* HeteroData (the original is left untouched) with
-        the incoming_log's device/location/resource nodes and edges
-        merged in. Used by AnomalyDetector to compute a "what-if"
-        embedding without mutating the stored baseline.
-        """
+
         graph_copy = graph.clone()
         registries = graph_copy.node_key_registry  # type: ignore[attr-defined]
 
@@ -292,8 +238,7 @@ class CyberGraphBuilder:
             data["device", "located_in", "location"].edge_index.flip(0)
         )
 
-        # Stash string->index registries so inject_event() can extend
-        # this exact graph consistently later.
+
         data.node_key_registry = {
             "user": dict(self.registry.user),
             "device": dict(self.registry.device),

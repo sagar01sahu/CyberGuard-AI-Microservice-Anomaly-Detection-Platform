@@ -16,19 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/**
- * Stateless JWT + API-key security configuration.
- *
- *  - POST /api/v1/logs/ingest is open at the authorizeHttpRequests level
- *    (permitAll) but is actually gated by ApiKeyAuthFilter, which
- *    rejects any request without a valid X-API-Key header.
- *  - Every other endpoint requires a valid Bearer JWT, enforced by
- *    JwtAuthenticationFilter.
- *
- * Both filters run before UsernamePasswordAuthenticationFilter and each
- * internally no-ops (shouldNotFilter) for paths that aren't theirs to
- * guard, so they never interfere with one another.
- */
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

@@ -6,7 +6,7 @@ export default function MicroservicesTab({ telemetryPackets }) {
 
   return (
     <div>
-      {/* Visual Microservice Architecture Diagram */}
+
       <div className="glass-card flow-diagram-container">
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Network style={{ color: 'var(--accent-cyan)' }} /> Real-Time Microservice Inter-Process Data Pipeline
@@ -69,9 +69,9 @@ export default function MicroservicesTab({ telemetryPackets }) {
         </div>
       </div>
 
-      {/* Live Data Transfer Table & Inspector Split View */}
+
       <div style={{ display: 'grid', gridTemplateColumns: selectedPacket ? '1fr 1fr' : '1fr', gap: '1.5rem' }}>
-        {/* Packets Stream Table */}
+
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Eye style={{ color: 'var(--accent-cyan)' }} /> Inter-Microservice Data Packets ({telemetryPackets.length})
@@ -129,7 +129,7 @@ export default function MicroservicesTab({ telemetryPackets }) {
           )}
         </div>
 
-        {/* Selected Packet JSON Inspector Modal / Panel */}
+
         {selectedPacket && (
           <div className="glass-card" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>

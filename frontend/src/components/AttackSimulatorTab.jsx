@@ -27,7 +27,7 @@ export default function AttackSimulatorTab({ logs, onTriggerAttack }) {
 
   return (
     <div>
-      {/* Attack Injection Controls Panel */}
+
       <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Flame style={{ color: 'var(--accent-rose)' }} /> On-Demand Cyber Attack Injector
@@ -70,7 +70,7 @@ export default function AttackSimulatorTab({ logs, onTriggerAttack }) {
           })}
         </div>
 
-        {/* Injection Result Alert */}
+
         {lastResult && (
           <div style={{ marginTop: '1.5rem', background: '#080b11', border: '1px solid var(--border-glow)', padding: '1rem', borderRadius: '8px' }}>
             <h4 style={{ fontSize: '0.9rem', color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>Attack Injection Status:</h4>
@@ -81,7 +81,7 @@ export default function AttackSimulatorTab({ logs, onTriggerAttack }) {
         )}
       </div>
 
-      {/* Access Logs Stream Table */}
+
       <div className="glass-card" style={{ padding: '1.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>
           Live Access Log Stream ({logs.length} events)

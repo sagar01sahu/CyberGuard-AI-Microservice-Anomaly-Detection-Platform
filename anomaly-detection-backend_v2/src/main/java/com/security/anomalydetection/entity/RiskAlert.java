@@ -10,10 +10,7 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * A risk alert raised when the AI engine's risk score for an AccessLog
- * crosses the alerting threshold.
- */
+
 @Entity
 @Table(name = "risk_alerts", indexes = {
         @Index(name = "idx_risk_alerts_timestamp", columnList = "timestamp")

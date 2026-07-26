@@ -1,6 +1,4 @@
-"""
-train_hgnn.py
-"""
+
 
 from __future__ import annotations
 
@@ -23,7 +21,7 @@ logger = logging.getLogger("hgnn-trainer")
 MODEL_SAVE_PATH = os.path.join(os.path.dirname(__file__), "security_hgnn.pt")
 
 def generate_synthetic_user_logs(entity_id: str, role: str, num_logs: int = 10) -> List[Dict]:
-    """Generates a sequence of realistic normal access logs for a user."""
+
     os_versions = {"ENGINEERING": "macOS 14", "MARKETING": "Windows 11", "FINANCE": "Windows 10", "HR": "macOS 13"}
     browsers = {"ENGINEERING": "Chrome/124.0", "MARKETING": "Edge/120.0", "FINANCE": "Firefox/118.0", "HR": "Safari/17.0"}
     geo_bases = {

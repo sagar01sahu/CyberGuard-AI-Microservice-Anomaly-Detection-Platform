@@ -1,15 +1,3 @@
-"""
-verify_project.py
-
-Verifies the complete Synthetic Log Generator project.
-
-Run
-
-python verify_project.py
-
-Author:
-    Sagar Kumar Sahu
-"""
 
 from __future__ import annotations
 
@@ -48,7 +36,7 @@ def print_header(title: str):
 
 def main():
 
-    # ======================================================
+
 
     print_header(
 
@@ -71,7 +59,7 @@ def main():
         )
     )
 
-    # ======================================================
+
 
     print_header(
 
@@ -103,7 +91,7 @@ def main():
 
     )
 
-    # ======================================================
+
 
     print_header(
 
@@ -129,7 +117,7 @@ def main():
 
     print("✓ State Machine OK")
 
-    # ======================================================
+
 
     print_header(
 
@@ -159,7 +147,7 @@ def main():
 
     print("✓ JSON OK")
 
-    # ======================================================
+
 
     print_header(
 
@@ -227,7 +215,7 @@ def main():
 
         )
 
-    # ======================================================
+
 
     print_header(
 
@@ -249,7 +237,7 @@ def main():
 
     print("✓ Dispatcher executed")
 
-    # ======================================================
+
 
     print_header(
 
@@ -273,7 +261,7 @@ def main():
 
     print("✓ State Machine Integration OK")
 
-    # ======================================================
+
 
     print_header(
 

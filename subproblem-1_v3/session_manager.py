@@ -1,17 +1,4 @@
-"""
-session_manager.py
 
-Maintains persistent sessions for every simulated user.
-
-Responsibilities
-----------------
-• Create sessions
-• Login users
-• Logout users
-• Track idle time
-• Track last activity
-• Store session IDs
-"""
 
 from __future__ import annotations
 
@@ -28,23 +15,18 @@ logger = logging.getLogger(__name__)
 
 
 class SessionManager:
-    """
-    Stores and manages all active user sessions.
-    """
+
 
     def __init__(self) -> None:
 
         self.sessions: Dict[str, UserSession] = {}
 
-    # ======================================================
 
     def create_session(
         self,
         user: UserProfile
     ) -> UserSession:
-        """
-        Creates an OFFLINE session if one doesn't exist.
-        """
+
 
         if user.entity_id not in self.sessions:
 
@@ -54,7 +36,7 @@ class SessionManager:
 
         return self.sessions[user.entity_id]
 
-    # ======================================================
+
 
     def get_session(
         self,
@@ -66,7 +48,7 @@ class SessionManager:
 
         return self.sessions[entity_id]
 
-    # ======================================================
+
 
     def login(
         self,
@@ -105,7 +87,7 @@ class SessionManager:
 
         return session
 
-    # ======================================================
+
 
     def logout(
         self,
@@ -130,7 +112,7 @@ class SessionManager:
             entity_id
         )
 
-    # ======================================================
+
 
     def update_activity(
         self,
@@ -149,7 +131,7 @@ class SessionManager:
 
         session.idle_minutes = 0
 
-    # ======================================================
+
 
     def increase_idle(
         self,
@@ -164,7 +146,7 @@ class SessionManager:
 
         session.idle_minutes += minutes
 
-    # ======================================================
+
 
     def failed_login(
         self,
@@ -178,7 +160,7 @@ class SessionManager:
 
         session.failed_login_attempts += 1
 
-    # ======================================================
+
 
     def reset_failed_login(
         self,
@@ -192,7 +174,7 @@ class SessionManager:
 
         session.failed_login_attempts = 0
 
-    # ======================================================
+
 
     def is_logged_in(
         self,
@@ -204,7 +186,7 @@ class SessionManager:
 
         return self.sessions[entity_id].is_logged_in
 
-    # ======================================================
+
 
     def total_sessions(self) -> int:
         """
@@ -213,7 +195,7 @@ class SessionManager:
 
         return len(self.sessions)
 
-    # ======================================================
+
 
     def active_sessions(self) -> int:
         """
@@ -226,7 +208,7 @@ class SessionManager:
             if session.is_logged_in
         )
 
-    # ======================================================
+
 
     def summary(self) -> dict:
         """

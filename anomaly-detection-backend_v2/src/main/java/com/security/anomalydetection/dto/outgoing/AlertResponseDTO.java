@@ -10,10 +10,7 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * Exact wire schema returned to the React dashboard by
- * GET /api/v1/alerts/live.
- */
+
 @Getter
 @Setter
 @NoArgsConstructor

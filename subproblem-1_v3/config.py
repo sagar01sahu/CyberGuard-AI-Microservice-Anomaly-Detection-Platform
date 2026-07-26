@@ -1,21 +1,11 @@
-"""
-config.py
 
-Central configuration for the synthetic cybersecurity log generator.
-"""
 
 from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
 class Config:
-    """
-    Global application configuration.
-    """
 
-    # ============================================================
-    # Simulation
-    # ============================================================
 
     USER_POOL_SIZE: int = 500
 
@@ -25,9 +15,7 @@ class Config:
 
     ANOMALY_PROBABILITY: float = 0.02
 
-    # ============================================================
-    # HTTP
-    # ============================================================
+
 
     API_URL: str = "http://localhost:8080/api/v1/logs/ingest"
 
@@ -39,9 +27,7 @@ class Config:
 
     INITIAL_BACKOFF: float = 1.0
 
-    # ============================================================
-    # User Behaviour
-    # ============================================================
+
 
     LOGIN_STD_DEV: float = 1.0
 

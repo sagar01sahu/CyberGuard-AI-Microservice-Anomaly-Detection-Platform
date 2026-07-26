@@ -1,10 +1,4 @@
-"""
-control_api.py
 
-Lightweight FastAPI HTTP service that exposes controls for the Synthetic Log Generator.
-Allows the React UI to trigger specific cyber attack scenarios (Brute Force,
-Impossible Travel, Lateral Movement, Device Spoofing) on demand and monitor stream state.
-"""
 
 import random
 import requests

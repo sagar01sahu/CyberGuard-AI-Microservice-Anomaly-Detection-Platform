@@ -12,10 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Captures live microservice data transfer packets for UI visualization
- * in the React Microservice Data Flow tab.
- */
+
 @Service
 public class TelemetryService {
 
@@ -29,15 +26,15 @@ public class TelemetryService {
     public static class MicroservicePacket {
         private String packetId;
         private String timestamp;
-        private String sourceService;     // e.g. "Microservice 1: Synthetic Log Generator"
-        private String targetService;     // e.g. "Microservice 2: Spring Boot Backend"
-        private String endpoint;          // e.g. "POST /api/v1/logs/ingest"
-        private String protocol;          // e.g. "HTTP/1.1 REST (X-API-Key)"
+        private String sourceService;
+        private String targetService;
+        private String endpoint;
+        private String protocol;
         private String entityId;
-        private String payloadType;       // "Log Ingestion", "AI Feature Vector", "Risk Score Output"
+        private String payloadType;
         private Object requestBody;
         private Object responseBody;
-        private String status;            // "SUCCESS", "ANOMALY_DETECTED", "PENDING"
+        private String status;
         private Long latencyMs;
     }
 

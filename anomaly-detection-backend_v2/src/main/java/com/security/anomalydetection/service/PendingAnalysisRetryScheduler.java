@@ -9,11 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Periodically retries AccessLog rows that failed AI analysis (status
- * PENDING_ANALYSIS) due to a transient AI-engine outage, so events are
- * never silently left unscored.
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor

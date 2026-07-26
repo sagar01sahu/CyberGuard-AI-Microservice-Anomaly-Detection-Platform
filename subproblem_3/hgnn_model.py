@@ -1,12 +1,4 @@
-"""
-hgnn_model.py
 
-2-layer Heterogeneous GraphSAGE network that learns a structural
-"behavioral context" embedding for a User node from its neighborhood
-across Device, Location and Resource node types.
-
-Component 2 of Sub-Problem 3.1 (HGNN Anomaly Detector).
-"""
 
 from __future__ import annotations
 
@@ -37,14 +29,7 @@ NODE_TYPES = ["user", "device", "location", "resource"]
 
 
 class SecurityHGNN(nn.Module):
-    """
-    A 2-layer Heterogeneous GraphSAGE encoder.
 
-    Layer 1 projects every node type's raw features into a shared
-    hidden_channels space while aggregating 1-hop neighbor information
-    per edge type. Layer 2 aggregates 2-hop information and projects
-    into out_channels, the final behavioral embedding size.
-    """
 
     def __init__(self, hidden_channels: int = 32, out_channels: int = 16) -> None:
         super().__init__()
@@ -89,10 +74,7 @@ class SecurityHGNN(nn.Module):
         h_dict = self.conv1(x_dict, edge_index_dict)
         h_dict = {k: F.relu(v) for k, v in h_dict.items()}
 
-        # HeteroConv only returns entries for node types that received
-        # at least one incoming message in layer 1. Carry through any
-        # node type layer-1 skipped (zero-init at hidden width) so
-        # layer 2's SAGEConv shape expectations are never violated.
+
         for node_type in NODE_TYPES:
             if node_type not in h_dict and node_type in x_dict:
                 h_dict[node_type] = torch.zeros(
@@ -114,14 +96,7 @@ class SecurityHGNN(nn.Module):
         x_dict: Dict[str, torch.Tensor],
         edge_index_dict: Dict[Tuple[str, str, str], torch.Tensor],
     ) -> torch.Tensor:
-        """
-        Convenience wrapper returning only the pooled User embedding.
 
-        Returns:
-            Tensor[out_channels] -- mean-pooled across user nodes
-            (a per-user baseline graph normally contains exactly one
-            user node, but pooling is applied defensively).
-        """
         out_dict = self.forward(x_dict, edge_index_dict)
         user_emb = out_dict["user"]  # [num_users, out_channels]
         return user_emb.mean(dim=0)  # [out_channels]

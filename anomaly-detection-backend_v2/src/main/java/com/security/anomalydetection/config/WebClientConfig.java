@@ -12,17 +12,7 @@ import reactor.netty.http.client.HttpClient;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Configures the WebClient bean used to talk to the external Python AI
- * microservice.
- *
- * A dedicated, bounded connect timeout plus read/write timeouts are set
- * so a slow or hanging AI engine can never block an ingestion request
- * indefinitely -- this keeps the ingestion endpoint's throughput
- * predictable even under AI engine degradation, and works together with
- * the fallback path in LogProcessingService (mark PENDING_ANALYSIS and
- * move on) rather than ever hanging the caller.
- */
+
 @Configuration
 public class WebClientConfig {
 

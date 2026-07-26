@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Serves live risk alert data, telemetry, system statistics, and log feeds
- * to the React dashboard.
- */
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

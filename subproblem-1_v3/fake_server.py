@@ -1,20 +1,4 @@
-"""
-fake_server.py
 
-A lightweight fake Spring Boot server for testing the
-Synthetic Cybersecurity Log Generator.
-
-Endpoint
-
-POST /api/v1/logs/ingest
-
-Runs on
-
-http://localhost:8080
-
-Author:
-    Sagar Kumar Sahu
-"""
 
 from __future__ import annotations
 
@@ -38,14 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class FakeSpringBootHandler(BaseHTTPRequestHandler):
-    """
-    Fake REST endpoint.
-    """
+
 
     def do_POST(self):
-        """
-        Handle POST requests.
-        """
+
 
         if self.path != "/api/v1/logs/ingest":
 
@@ -132,9 +112,7 @@ class FakeSpringBootHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def log_message(self, format, *args):
-        """
-        Disable default HTTP logging.
-        """
+
 
         return
 

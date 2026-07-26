@@ -1,4 +1,4 @@
-/* CyberGuard Modern Dark/Glassmorphism Design System */
+
 :root {
   --bg-primary: #0a0d14;
   --bg-secondary: #121824;
@@ -46,7 +46,7 @@ body {
   background-attachment: fixed;
 }
 
-/* Custom Scrollbar */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -62,7 +62,7 @@ body {
   background: var(--accent-cyan);
 }
 
-/* Glassmorphism Card */
+
 .glass-card {
   background: var(--bg-card);
   backdrop-filter: blur(16px);
@@ -78,7 +78,7 @@ body {
   box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.1);
 }
 
-/* Header & Nav */
+
 .navbar {
   display: flex;
   align-items: center;
@@ -154,7 +154,7 @@ body {
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
 }
 
-/* Status Pill */
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -199,14 +199,14 @@ body {
   100% { opacity: 1; transform: scale(1); }
 }
 
-/* Layout Main */
+
 .app-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-/* Grid & Cards */
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -237,7 +237,7 @@ body {
   font-family: var(--font-mono);
 }
 
-/* Microservice Architecture Flow Diagram */
+
 .flow-diagram-container {
   padding: 2rem;
   margin-bottom: 2rem;
@@ -306,7 +306,7 @@ body {
   100% { transform: translateX(20px); opacity: 0; }
 }
 
-/* Code & Json Inspector */
+
 .json-box {
   background: #080b11;
   border: 1px solid var(--border-color);
@@ -321,7 +321,7 @@ body {
   word-break: break-word;
 }
 
-/* Tables */
+
 .custom-table {
   width: 100%;
   border-collapse: collapse;
@@ -347,7 +347,7 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Buttons */
+
 .btn-primary {
   background: var(--gradient-cyber);
   color: #fff;

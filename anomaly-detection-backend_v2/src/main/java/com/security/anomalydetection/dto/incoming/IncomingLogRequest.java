@@ -11,13 +11,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 
-/**
- * Exact wire schema of the payload sent by the Python data generator.
- * Field names use snake_case on the wire (entity_id, geo_location, ...)
- * and are mapped explicitly via @JsonProperty rather than relying on a
- * global naming strategy, to keep the contract obvious from this class
- * alone.
- */
+
 @Getter
 @Setter
 @NoArgsConstructor

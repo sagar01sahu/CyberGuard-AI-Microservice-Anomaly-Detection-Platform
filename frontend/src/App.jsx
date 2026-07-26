@@ -18,12 +18,12 @@ export default function App() {
   const [aiStatus, setAiStatus] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Use a ref to store the token so the polling interval always has the latest value
+
   const jwtToken = useRef(null);
 
   const fetchAllData = async () => {
     try {
-      // 1. Ensure we have a JWT Token before querying the secure endpoints
+
       if (!jwtToken.current) {
         const tokenRes = await fetch(`${SPRING_BOOT_BASE}/auth/dev-token?subject=analyst`, {
           method: 'POST'
@@ -34,17 +34,17 @@ export default function App() {
           jwtToken.current = tokenData.token;
         } else {
           console.error('Failed to fetch JWT token. Ensure Spring Boot is running with the "dev" profile.');
-          return; // Abort the fetch if we are unauthorized
+          return;
         }
       }
 
-      // 2. Set up headers with the Bearer token
+
       const authHeaders = {
         'Authorization': `Bearer ${jwtToken.current}`,
         'Content-Type': 'application/json'
       };
 
-      // 3. Fetch Spring Boot stats & alerts WITH the auth headers
+
       const statsRes = await fetch(`${SPRING_BOOT_BASE}/dashboard/stats`, { headers: authHeaders })
           .then(r => r.ok ? r.json() : null).catch(() => null);
       const alertsRes = await fetch(`${SPRING_BOOT_BASE}/alerts/live`, { headers: authHeaders })
@@ -59,7 +59,7 @@ export default function App() {
       if (telemetryRes) setTelemetry(telemetryRes);
       if (logsRes) setLogs(logsRes);
 
-      // 4. Fetch AI Engine model status (assuming Python doesn't require the JWT)
+
       const aiRes = await fetch(`${AI_ENGINE_BASE}/model/status`)
           .then(r => r.ok ? r.json() : null).catch(() => null);
       if (aiRes) setAiStatus(aiRes);
@@ -97,7 +97,7 @@ export default function App() {
 
   return (
       <div>
-        {/* Top Glass Navbar */}
+
         <nav className="navbar">
           <div className="logo-container">
             <div className="logo-icon">
@@ -111,7 +111,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Navigation Tabs */}
+
           <div className="nav-tabs">
             <button
                 className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
@@ -152,7 +152,7 @@ export default function App() {
           </div>
         </nav>
 
-        {/* App Body */}
+
         <main className="app-container">
           {activeTab === 'overview' && (
               <OverviewTab stats={stats} alerts={alerts} aiStatus={aiStatus} />

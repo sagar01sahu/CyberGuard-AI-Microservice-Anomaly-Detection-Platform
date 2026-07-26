@@ -1,14 +1,4 @@
-"""
-anomaly_injector.py
 
-Injects realistic cybersecurity attack scenarios.
-
-This module never modifies the original log in-place.
-Every attack returns newly created log events.
-
-Author:
-    Synthetic Log Generator Project
-"""
 
 from __future__ import annotations
 
@@ -33,27 +23,7 @@ fake = Faker()
 
 
 class AnomalyInjector:
-    """
-    Responsible for generating attack events.
 
-    Overall anomaly rate is controlled by
-
-        Config.ANOMALY_PROBABILITY
-
-    Supported attacks
-
-        1. Brute Force
-
-        2. Impossible Travel
-
-        3. Lateral Movement
-
-        4. Device Spoofing
-
-        5. Credential Stuffing
-
-        6. Low-and-Slow Exfiltration
-    """
 
     def __init__(
 
@@ -81,9 +51,7 @@ class AnomalyInjector:
 
         ]
 
-    # =======================================================
-    # Public API
-    # =======================================================
+
 
     def inject_anomaly(
 
@@ -94,17 +62,7 @@ class AnomalyInjector:
         base_log: Dict
 
     ) -> List[Dict]:
-        """
-        Returns
 
-        Either
-
-            [normal_log]
-
-        or
-
-            anomaly events
-        """
 
         probability = random.random()
 
@@ -130,9 +88,7 @@ class AnomalyInjector:
 
         )
 
-    # =======================================================
-    # Helper Methods
-    # =======================================================
+
 
     @staticmethod
     def _clone(
@@ -143,7 +99,7 @@ class AnomalyInjector:
 
         return copy.deepcopy(log)
 
-    # -------------------------------------------------------
+
 
     @staticmethod
     def _future_time(
@@ -170,7 +126,7 @@ class AnomalyInjector:
 
         )
 
-    # -------------------------------------------------------
+
 
     @staticmethod
     def _random_public_ip() -> str:
@@ -187,7 +143,7 @@ class AnomalyInjector:
 
         )
 
-    # -------------------------------------------------------
+
 
     @staticmethod
     def _germany_location():
@@ -200,7 +156,7 @@ class AnomalyInjector:
 
         }
 
-    # -------------------------------------------------------
+
 
     @staticmethod
     def _india_location():
@@ -213,13 +169,7 @@ class AnomalyInjector:
 
         }
 
-    # =======================================================
-    # Attack Placeholders
-    # =======================================================
 
-        # =======================================================
-    # Attack 1 : Brute Force
-    # =======================================================
 
     def _brute_force(
         self,
@@ -264,21 +214,14 @@ class AnomalyInjector:
 
         return events
 
-    # =======================================================
-    # Attack 2 : Impossible Travel
-    # =======================================================
+
 
     def _impossible_travel(
         self,
         user: UserProfile,
         base_log: Dict
     ) -> List[Dict]:
-        """
-        Successful login from home location
-        followed by another login
-        2–5 minutes later
-        from Germany.
-        """
+
 
         logger.warning(
             "Generating Impossible Travel for %s",
@@ -321,23 +264,14 @@ class AnomalyInjector:
 
         ]
 
-    # -------------------------------------------------------
 
-        # =======================================================
-    # Attack 3 : Lateral Movement
-    # =======================================================
 
     def _lateral_movement(
         self,
         user: UserProfile,
         base_log: Dict
     ) -> List[Dict]:
-        """
-        Simulate unauthorized access to high-value resources.
 
-        A non-privileged user attempts to access
-        Engineering/Finance sensitive resources.
-        """
 
         logger.warning(
             "Generating Lateral Movement for %s",
@@ -372,18 +306,14 @@ class AnomalyInjector:
 
         return [event]
 
-    # =======================================================
-    # Attack 4 : Device Spoofing
-    # =======================================================
+
 
     def _device_spoofing(
         self,
         user: UserProfile,
         base_log: Dict
     ) -> List[Dict]:
-        """
-        Mid-session device changes unexpectedly.
-        """
+
 
         logger.warning(
             "Generating Device Spoofing for %s",
@@ -452,21 +382,14 @@ class AnomalyInjector:
 
         return [event]
 
-    # -------------------------------------------------------
 
-        # =======================================================
-    # Attack 5 : Credential Stuffing
-    # =======================================================
 
     def _credential_stuffing(
         self,
         user: UserProfile,
         base_log: Dict
     ) -> List[Dict]:
-        """
-        Generate failed login attempts against many users
-        from the same malicious IP address.
-        """
+
 
         logger.warning(
             "Generating Credential Stuffing attack"
@@ -517,19 +440,14 @@ class AnomalyInjector:
 
         return events
 
-    # =======================================================
-    # Attack 6 : Low-and-Slow Exfiltration
-    # =======================================================
+
 
     def _low_and_slow(
         self,
         user: UserProfile,
         base_log: Dict
     ) -> List[Dict]:
-        """
-        Simulates stealthy exfiltration of sensitive data
-        during off-hours.
-        """
+
 
         logger.warning(
             "Generating Low-and-Slow Exfiltration for %s",

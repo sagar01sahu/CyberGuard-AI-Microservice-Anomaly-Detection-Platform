@@ -1,13 +1,4 @@
-"""
-cold_start.py
 
-Solves the "cold-start" problem for brand-new entities with fewer than
-5 historical logs: score their behavior against a Federated Peer
-Group baseline (aggregated via FedAvg in federated_aggregator.py),
-then provide a confidence-weighted blend as personal history accrues.
-
-Components 2 and 3 of Sub-Problem 3.2 (Federated Cold-Start).
-"""
 
 from __future__ import annotations
 
@@ -17,9 +8,7 @@ from typing import Dict, Optional
 
 import torch
 
-# Must match SecurityHGNN's out_channels so cold-start scores live in
-# the same embedding space as the personal HGNN -- this is what makes
-# BaselineTransitioner's later blending mathematically meaningful.
+
 PEER_EMBEDDING_DIM = 16
 
 STD_DEV_THRESHOLD = 3.0
@@ -33,7 +22,7 @@ def _hour_of_day(timestamp: str) -> int:
 
 
 def _ip_network_type(source_ip: str) -> str:
-    """Coarse classification; production should use a real IP-intel service."""
+
     private_prefixes = ("10.", "172.16.", "192.168.")
     if any(source_ip.startswith(p) for p in private_prefixes):
         return "internal"
@@ -41,29 +30,13 @@ def _ip_network_type(source_ip: str) -> str:
 
 
 def _uri_bucket(uri: str) -> float:
-    """Deterministic hash of the resource URI into [0, 1]."""
+
     digest = hashlib.sha256(uri.encode("utf-8")).digest()
     return int.from_bytes(digest[:4], "big") / 0xFFFFFFFF
 
 
 def _project_log_features(incoming_log: Dict, dim: int = PEER_EMBEDDING_DIM) -> torch.Tensor:
-    """
-    Projects the three cold-start-relevant raw signals -- time of day,
-    IP network type, and resource URI -- into a fixed-size vector in
-    the same dimensionality as the peer embedding space, via a
-    deterministic (untrained) hash-based projection.
 
-    This mirrors a feature-hashing / random-projection trick: it lets
-    us compute a numeric distance against global_peer_tensor without a
-    trained personal HGNN, at the cost of the projection itself being
-    a fixed, non-learned mapping. In production this projector would
-    typically be pre-trained jointly with the HGNN so it lands in a
-    genuinely comparable space; swapping it in does not change any of
-    the surrounding math below.
-
-    Returns:
-        Tensor[dim]
-    """
     hour = _hour_of_day(incoming_log.get("timestamp", ""))
     net_type = _ip_network_type(incoming_log.get("source_ip", ""))
     uri_val = _uri_bucket(incoming_log.get("resource_accessed", "/unknown"))
@@ -78,10 +51,7 @@ def _project_log_features(incoming_log: Dict, dim: int = PEER_EMBEDDING_DIM) -> 
 
 
 class ColdStartEvaluator:
-    """
-    Scores a brand-new (<5 historical logs) entity's incoming event
-    against its role's Federated Peer baseline tensor.
-    """
+
 
     def evaluate_new_user(
         self,
@@ -89,22 +59,7 @@ class ColdStartEvaluator:
         global_peer_tensor: torch.Tensor,
         peer_std_tensor: Optional[torch.Tensor] = None,
     ) -> Dict[str, object]:
-        """
-        Args:
-            incoming_log: raw event dict for the new user.
-            global_peer_tensor: Tensor[embedding_dim] -- the FedAvg
-                peer mean produced by
-                FederatedPeerAggregator.aggregate_peer_weights() for
-                this user's role.
-            peer_std_tensor: Tensor[embedding_dim] -- per-dimension
-                peer std from
-                FederatedPeerAggregator.compute_peer_std(). If
-                omitted, a conservative default std of 1.0 per
-                dimension is used.
 
-        Returns:
-            {"risk_score": float, "anomaly_type": str, "explainability": str}
-        """
         dim = global_peer_tensor.shape[0]
         std = peer_std_tensor if peer_std_tensor is not None else torch.ones(dim)
         std = torch.clamp(std, min=1e-4)  # guard divide-by-zero for tight peer groups
@@ -147,24 +102,13 @@ class ColdStartEvaluator:
 
 
 class BaselineTransitioner:
-    """
-    Implements the sliding-window confidence scale that blends the
-    Federated Peer baseline with the Personal HGNN baseline as a
-    user's historical log count grows.
-    """
+
 
     COLD_START_MAX = 5   # < 5 logs => 100% federated
     STABLE_MIN = 50       # > 50 logs => 100% personal HGNN
 
     def calculate_confidence(self, user_log_count: int) -> float:
-        """
-        Returns the *personal-HGNN* weight in [0.0, 1.0]:
-            - 0.0 when user_log_count < 5    (100% federated)
-            - linearly ramps 0.0 -> 1.0 across [5, 50]
-            - 1.0 when user_log_count > 50   (100% personal HGNN)
 
-        The federated weight is simply (1.0 - personal_weight).
-        """
         if user_log_count < self.COLD_START_MAX:
             return 0.0
         if user_log_count > self.STABLE_MIN:
@@ -174,12 +118,7 @@ class BaselineTransitioner:
         return round(progressed / span, 4)
 
     def blend_scores(self, federated_result: Dict, personal_result: Dict, user_log_count: int) -> Dict:
-        """
-        Blends two already-computed risk_score outputs using
-        calculate_confidence() as the mixing weight. Useful during the
-        [5, 50] transition window if the FastAPI layer chooses to
-        compute both signals rather than routing to just one.
-        """
+
         personal_weight = self.calculate_confidence(user_log_count)
         federated_weight = 1.0 - personal_weight
 

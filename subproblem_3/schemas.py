@@ -1,12 +1,4 @@
-"""
-schemas.py
 
-Pydantic request/response models for the FastAPI orchestration layer.
-Field names use snake_case to exactly match the JSON payload contract
-defined by the Spring Boot backend (Sub-Problem 2).
-
-Component 1 of Sub-Problem 3.3 (FastAPI Wrapper).
-"""
 
 from __future__ import annotations
 
@@ -20,7 +12,7 @@ class GeoLocation(BaseModel):
 
 
 class LogEvent(BaseModel):
-    """A single access-log record, supporting both snake_case and camelCase."""
+
 
     entity_id: str = "UNKNOWN"
     role: Optional[str] = Field(default="UNKNOWN", description="Job role, e.g. MARKETING")
@@ -67,10 +59,7 @@ class LogEvent(BaseModel):
 
 
 class LogPayload(BaseModel):
-    """
-    Request body for POST /predict.
-    Accepts both current_event/historical_logs and currentEvent/historicalEvents.
-    """
+
 
     current_event: LogEvent
     historical_logs: List[LogEvent] = Field(
@@ -91,7 +80,7 @@ class LogPayload(BaseModel):
 
 
 class PredictionResponse(BaseModel):
-    """Response body for POST /predict -- returned to Spring Boot."""
+
 
     risk_score: float = Field(..., ge=0.0, le=1.0)
     anomaly_type: str

@@ -14,11 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-/**
- * Receives synthetic access-log events from the Python data generator.
- * Secured via a static API key (see ApiKeyAuthFilter), not JWT, since
- * this is a trusted machine-to-machine endpoint.
- */
+
 @RestController
 @RequestMapping("/api/v1/logs")
 @RequiredArgsConstructor

@@ -13,24 +13,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.time.Duration;
 
-/**
- * Thin synchronous wrapper around the reactive WebClient.
- *
- * The AI engine call is fundamentally a blocking, I/O-bound network
- * round trip in this orchestrator's workflow. We use WebClient (Spring
- * WebFlux) instead of the deprecated RestTemplate because it is the
- * modern, supported HTTP client in Spring Boot 3.x -- but we call
- * .block() on the returned Mono to keep processIncomingLog's control
- * flow synchronous, exactly as the spec requires ("make a synchronous
- * POST request"). Blocking is safe here because this happens on a
- * request-handling thread from the standard Tomcat pool, not on a
- * shared Netty event-loop thread, so it cannot starve other reactive
- * work.
- *
- * A bounded timeout (see WebClientConfig for connect timeout, and the
- * .block(timeout) call below for the response timeout) guarantees a
- * hanging AI engine can never block an ingestion request indefinitely.
- */
+
 @Slf4j
 @Component
 public class AiEngineClientImpl implements AiEngineClient {

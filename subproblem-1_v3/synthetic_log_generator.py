@@ -1,14 +1,4 @@
-"""
-synthetic_log_generator.py
 
-Entry point for the Synthetic Cybersecurity Log Generator.
-
-This script initializes logging, creates the simulation runner,
-and starts continuous log generation.
-
-Author:
-    Sagar Kumar Sahu
-"""
 
 from __future__ import annotations
 
@@ -21,9 +11,7 @@ from config import Config
 
 
 def configure_logging() -> None:
-    """
-    Configure application logging.
-    """
+
 
     logging.basicConfig(
 
@@ -42,9 +30,7 @@ def configure_logging() -> None:
 
 
 def signal_handler(sig, frame):
-    """
-    Gracefully shutdown the simulator.
-    """
+
 
     logging.getLogger(__name__).info(
         "Received shutdown signal..."
@@ -58,9 +44,7 @@ def signal_handler(sig, frame):
 
 
 def main() -> None:
-    """
-    Main entry point.
-    """
+
 
     configure_logging()
 

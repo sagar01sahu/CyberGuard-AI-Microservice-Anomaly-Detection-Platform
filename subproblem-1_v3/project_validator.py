@@ -1,15 +1,4 @@
-"""
-=============================================================
-Synthetic Cybersecurity Log Generator Validator
 
-This file validates the entire project.
-
-Run
-
-python project_validator.py
-
-=============================================================
-"""
 
 from __future__ import annotations
 
@@ -43,9 +32,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# ==========================================================
-# Fake Spring Boot Server
-# ==========================================================
 
 received_logs = []
 
@@ -102,9 +88,7 @@ def start_fake_server():
     return server
 
 
-# ==========================================================
-# Validator
-# ==========================================================
+
 
 class ProjectValidator:
 
@@ -126,7 +110,7 @@ class ProjectValidator:
 
         self.dispatcher = None
 
-    # ======================================================
+
 
     def title(self, text):
 
@@ -138,7 +122,7 @@ class ProjectValidator:
 
         print("=" * 70)
 
-    # ======================================================
+
 
     def success(self, text):
 
@@ -148,7 +132,7 @@ class ProjectValidator:
 
         print(f"[PASS] {text}")
 
-    # ======================================================
+
 
     def fail(self, text):
 

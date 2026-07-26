@@ -1,17 +1,4 @@
-"""
-profile_generator.py
 
-Generates persistent enterprise user profiles.
-
-Responsibilities
-----------------
-- Generate realistic enterprise employees
-- Weighted role distribution
-- Realistic IP addresses
-- Geographic distribution
-- Habitual working hours
-- Device information
-"""
 
 from __future__ import annotations
 
@@ -41,9 +28,7 @@ fake = Faker()
 
 
 class ProfileGenerator:
-    """
-    Generates persistent enterprise users.
-    """
+
 
     def __init__(self) -> None:
 
@@ -55,9 +40,7 @@ class ProfileGenerator:
 
     @staticmethod
     def _random_private_ip() -> str:
-        """
-        Generates a realistic private IPv4 address.
-        """
+
 
         subnet = random.choice(
             [
@@ -91,7 +74,7 @@ class ProfileGenerator:
             f"{random.randint(1,254)}"
         )
 
-    # ----------------------------------------------------------
+
 
     @staticmethod
     def _working_hours():
@@ -111,7 +94,7 @@ class ProfileGenerator:
 
         return start, end
 
-    # ----------------------------------------------------------
+
 
     def _choose_role(self) -> UserRole:
 
@@ -125,14 +108,14 @@ class ProfileGenerator:
 
         )[0]
 
-    # ----------------------------------------------------------
+
 
     @staticmethod
     def _manager_name() -> str:
 
         return fake.name()
 
-    # ----------------------------------------------------------
+
 
     @staticmethod
     def _risk_score(role: UserRole) -> float:
@@ -157,7 +140,7 @@ class ProfileGenerator:
 
         return mapping[role]
 
-    # ----------------------------------------------------------
+
 
     def _generate_profile(
 
@@ -223,7 +206,7 @@ class ProfileGenerator:
 
         return profile
 
-    # ----------------------------------------------------------
+
 
     def generate_user_pool(
 
@@ -232,9 +215,7 @@ class ProfileGenerator:
         count: int = 500
 
     ) -> List[UserProfile]:
-        """
-        Generate persistent enterprise users.
-        """
+
 
         logger.info(
 
