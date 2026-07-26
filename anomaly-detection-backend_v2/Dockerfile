@@ -12,4 +12,5 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Use the entrypoint script to launch the app
-ENTRYPOINT ["/entrypoint.sh"]
+# Automatically convert Render's DATABASE_URL to JDBC format inline at runtime
+ENTRYPOINT ["sh", "-c", "export SPRING_DATASOURCE_URL=\"jdbc:postgresql://${DATABASE_URL#*://}?sslmode=require\"; exec java -jar app.jar"]
