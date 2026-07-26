@@ -1,6 +1,6 @@
 services:
-  # 1. Python PyTorch AI Engine (Private Service)
-  - type: pserv
+  # 1. Python PyTorch AI Engine (Changed to a Web Service for Free Tier)
+  - type: web
     name: cyberguard-ai-engine
     runtime: docker
     dockerfilePath: ./subproblem_3/Dockerfile
@@ -58,7 +58,7 @@ services:
         value: "80"
 
 databases:
-  # Free PostgreSQL Database (Note: user field removed as Render handles it)
+  # Free PostgreSQL Database
   - name: cyberguard-db
     databaseName: cyberguard_db
     plan: free
