@@ -1,65 +1,65 @@
-databases:
-  - name: cyberguard-db
-    databaseName: cyberguard_db
-    user: postgres
-    plan: free
-
 services:
-  # 1. Python PyTorch AI Engine (mapped to ./subproblem_3)
-  - type: web
+  # 1. Python PyTorch AI Engine (Private Service)
+  - type: pserv
     name: cyberguard-ai-engine
     runtime: docker
-    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
-    branch: main
-    plan: free
-    dockerContext: ./subproblem_3
     dockerfilePath: ./subproblem_3/Dockerfile
+    dockerContext: ./subproblem_3
+    plan: free
     envVars:
       - key: PORT
-        value: 8000
+        value: "8000"
 
-  # 2. Java Spring Boot Backend (mapped to ./anomaly-detection-backend_v2)
+  # 2. Java Spring Boot Backend
   - type: web
     name: cyberguard-backend
     runtime: docker
-    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
-    branch: main
-    plan: free
-    dockerContext: ./anomaly-detection-backend_v2
     dockerfilePath: ./anomaly-detection-backend_v2/Dockerfile
+    dockerContext: ./anomaly-detection-backend_v2
+    plan: free
     envVars:
+      - key: PORT
+        value: "8080"
+      - key: SPRING_PROFILES_ACTIVE
+        value: "dev"
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: cyberguard-db
           property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: cyberguard-db
-          property: user
+        value: postgres
       - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: cyberguard-db
-          property: password
+        generateValue: true
       - key: AI_ENGINE_URL
-        fromService:
-          type: web
-          name: cyberguard-ai-engine
-          property: host
+        value: http://cyberguard-ai-engine:8000
 
-  # 3. React Frontend (mapped to ./frontend)
+  # 3. Synthetic Log Generator & Attack Control Service
+  - type: web
+    name: cyberguard-generator
+    runtime: docker
+    dockerfilePath: ./subproblem-1_v3/Dockerfile
+    dockerContext: ./subproblem-1_v3
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8001"
+      - key: API_URL
+        value: https://cyberguard-backend.onrender.com/api/v1/logs/ingest
+
+  # 4. React Frontend (Vite / Nginx)
   - type: web
     name: cyberguard-frontend
     runtime: docker
-    repo: https://github.com/sagar01sahu/CyberGuard-AI-Microservice-Anomaly-Detection-Platform
-    branch: main
-    plan: free
-    dockerContext: ./frontend
     dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
     envVars:
       - key: PORT
-        value: 80
-      - key: REACT_APP_API_URL
-        fromService:
-          type: web
-          name: cyberguard-backend
-          property: url
+        value: "80"
+
+databases:
+  # Free PostgreSQL Database (Note: 30-day expiration limit)
+  - name: cyberguard-db
+    databaseName: cyberguard_db
+    user: postgres
+    plan: free
