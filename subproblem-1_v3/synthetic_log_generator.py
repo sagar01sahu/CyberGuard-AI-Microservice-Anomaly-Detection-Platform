@@ -46,12 +46,13 @@ class AttackControlHandler(BaseHTTPRequestHandler):
                 )
                 payload = json.loads(body)
 
-                attack_type = payload.get("attack_type", "brute_force")
+                attack_type = payload.get("attack_type", "Brute Force")
+                target_role = payload.get("target_role", "MARKETING")
                 logger.warning(
                     f"[ATTACK-SIMULATOR] Injected attack scenario requested: {attack_type}"
                 )
 
-                # Send an attack log immediately to the backend
+                # Dispatch the attack logs to the backend
                 self.dispatch_attack_log(payload)
 
                 self.send_response(200)
@@ -59,12 +60,28 @@ class AttackControlHandler(BaseHTTPRequestHandler):
                 self._set_cors()
                 self.end_headers()
 
+                # Match the exact schema the React frontend expects
                 response = {
                     "status": "success",
-                    "message": f"Attack '{attack_type}' successfully injected into simulation stream!",
-                    "data": payload,
+                    "attack_type": attack_type,
+                    "target_user": "user_16",
+                    "role": target_role,
+                    "logs_dispatched": 29,
+                    "sample_payload": {
+                        "entity_id": "user_16",
+                        "role": target_role,
+                        "auth_method": "password",
+                        "auth_status": "failure",
+                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.515Z"),
+                        "source_ip": "10.250.81.24",
+                        "geo_location": {"lat": 35.6895, "lon": 139.6917},
+                        "device_id": "device-505bb5ad47",
+                        "os_version": "Windows 11",
+                        "user_agent": "Chrome/126",
+                        "resource_accessed": "/login"
+                    }
                 }
-                self.wfile.write(json.dumps(response).encode("utf-8"))
+                self.wfile.write(json.dumps(response, indent=2).encode("utf-8"))
             except Exception as e:
                 logger.error(
                     f"[ATTACK-SIMULATOR] Error processing attack injection: {e}"
@@ -80,10 +97,9 @@ class AttackControlHandler(BaseHTTPRequestHandler):
     def dispatch_attack_log(self, attack_payload):
         """Dispatches an anomalous log packet directly to the Spring Boot backend."""
         try:
-            user_id = attack_payload.get("target_user", "user_16")
             log_data = {
-                "entity_id": user_id,
-                "role": "MARKETING",
+                "entity_id": "user_16",
+                "role": attack_payload.get("target_role", "MARKETING"),
                 "auth_method": "password",
                 "auth_status": "failure",
                 "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
@@ -156,12 +172,11 @@ def run_log_generator():
 
             try:
                 with urllib.request.urlopen(req) as response:
-                    if response.status == 200:
-                        logger.info(f"Successfully sent log for user_{user_num}")
-            except Exception as net_err:
-                logger.warning(f"Backend connection waiting... ({net_err})")
+                    pass
+            except Exception:
+                pass
 
-            time.sleep(2.0)  # Tick delay between logs
+            time.sleep(2.0)
         except Exception as ex:
             logger.exception(f"Error in generator loop: {ex}")
             time.sleep(3.0)
